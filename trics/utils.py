@@ -30,7 +30,7 @@ def batch_matrix(matrix: np.array, zip_codes: np.array):
     return np.stack(list(Batches.values())), np.stack(list(Masks.values()))
 
 
-def single_unpad_matrix(batch_X: np.array, mask: np.array):
+def single_unbatch_matrix(batch_X: np.array, mask: np.array):
     """
     Removes padding from batch matrices based on a given mask.
 
@@ -51,10 +51,10 @@ def single_unpad_matrix(batch_X: np.array, mask: np.array):
 
     return unpad_X
 
-def unpad_matrix(X: np.array,masks: np.array) -> dict:
+def unbatch_matrix(X: np.array,masks: np.array) -> dict:
     original_X = {}
 
     for i in range(X.shape[0]):
-        original_X[i]  = single_unpad_matrix(X[i], masks[i]).reshape(-1, X.shape[-1])
+        original_X[i]  = single_unbatch_matrix(X[i], masks[i]).reshape(-1, X.shape[-1])
     
     return np.vstack((list(original_X.values()))) 

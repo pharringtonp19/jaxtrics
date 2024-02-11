@@ -1,5 +1,5 @@
 def generate_latex_table(data, label, caption, note=None):
-    headers = ['Model', 'Est', 'Std', '\%\Delta', 'N', 'Params', 'Core', 'Tenant', 'Landlord']
+    headers = ['Model', 'Est', 'Std', '\%\Delta', 'N', 'Params', 'Core', 'Zip', 'Tenant', 'Landlord']
     
     # Begin table with threeparttable for notes
     latex_table = f'\\begin{{table}}[htbp]\n\\begin{{threeparttable}}\n\\centering\n\\small\n\\caption{{{caption}}}\n\\label{{{label}}}\n'

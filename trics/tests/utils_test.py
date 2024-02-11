@@ -1,5 +1,5 @@
 import numpy as np
-from trics.utils import batch_matrix, unpad_matrix
+from trics.utils import batch_matrix, unbatch_matrix
 
 def batch_matrix_with_padding(matrix: np.array, zip_codes: np.array) -> dict:
     # Create batches as before
@@ -38,9 +38,9 @@ def test_batch_matrix_with_padding():
     assert mask.shape == (2, 2, 1)
 
 
-def test_unpad_matrix():
+def test_unbatch_matrix():
     matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     zip_codes = np.array([1, 2, 1])
     batched_matrix, mask = batch_matrix(matrix, zip_codes)
-    matrix_processed = unpad_matrix(batched_matrix, mask)
+    matrix_processed = unbatch_matrix(batched_matrix, mask)
     assert matrix_processed.shape == matrix.shape, matrix_processed 

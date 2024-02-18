@@ -42,5 +42,5 @@ def test_unbatch_matrix():
     matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     zip_codes = np.array([1, 2, 1])
     batched_matrix, mask = batch_matrix(matrix, zip_codes)
-    matrix_processed = unbatch_matrix(batched_matrix, mask)
-    assert matrix_processed.shape == matrix.shape, matrix_processed 
+    unbatched_matrix = unbatch_matrix(batched_matrix, mask)
+    assert unbatched_matrix.shape == matrix.shape

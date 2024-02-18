@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 def batch_matrix(matrix: np.array, zip_codes: np.array):
     # Create batches as before
@@ -58,3 +59,14 @@ def unbatch_matrix(X: np.array,masks: np.array) -> dict:
         original_X[i]  = single_unbatch_matrix(X[i], masks[i]).reshape(-1, X.shape[-1])
     
     return np.vstack((list(original_X.values()))) 
+
+
+def find_first_yes_or_no(text):
+    # This regular expression pattern looks for 'Yes' or 'No' (case insensitive)
+    pattern = r'\b(Yes|No)\b'
+    
+    # Search the text for the pattern
+    match = re.search(pattern, text, re.IGNORECASE)
+    
+    # If a match is found, return the matched text, otherwise return None
+    return match.group(0) if match else None

@@ -18,3 +18,14 @@ def sample(k, p, data, key):
 def ols(k, p, data, key):
     X, D, Y = sample(k, p, data, key)
     return fwl(X, D, Y)
+
+def get_residuals(X, D):
+    coeffsD = jnp.linalg.lstsq(X, D, rcond=None)[0]
+    dhat = X @ coeffsD
+    resD = D - dhat
+    return resD
+
+def get_fitted(X, D):
+    coeffsD = jnp.linalg.lstsq(X, D, rcond=None)[0]
+    dhat = X @ coeffsD
+    return dhat

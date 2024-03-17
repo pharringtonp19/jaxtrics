@@ -13,7 +13,11 @@ def sample(k, p, data, key):
     selected_X = data.X[idx]
     selected_D = data.D[idx]
     selected_Y = data.Y[idx]
-    return selected_X, selected_D, selected_Y
+    if data.Z is none:
+        return selected_X, selected_D, selected_Y
+    else:
+        selected_Z = data.Z[idx]
+        return selected_X, selected_D, selected_Y, selected_Z 
 
 def ols(k, p, data, key):
     X, D, Y = sample(k, p, data, key)

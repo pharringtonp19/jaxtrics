@@ -31,7 +31,7 @@ def fwl(data):
     coeffsY = jnp.linalg.lstsq(resD, data.Y, rcond=None)[0][0]
     return coeffsY
     
-def estimate_iv(data):
+def iv(data):
     dhat = get_fitted(jnp.hstack((data.X, data.Z)), data.D) 
     data = Data(data.X, dhat, data.Y)
     return fwl(data)

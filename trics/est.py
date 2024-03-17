@@ -7,7 +7,7 @@ def sample(k, p, data, key):
     selected_X = data.X[idx]
     selected_D = data.D[idx]
     selected_Y = data.Y[idx]
-    if data.Z is none:
+    if data.Z is None:
         return Data(selected_X, selected_D, selected_Y)
     else:
         selected_Z = data.Z[idx]

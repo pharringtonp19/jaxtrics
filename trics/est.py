@@ -32,7 +32,7 @@ def fwl(data):
     return coeffsY
     
 def estimate_iv(data):
-    dhat = get_fitted(jnp.hstack((data.X, data.Z))
+    dhat = get_fitted(jnp.hstack((data.X, data.Z)), data.D) 
     data = Data(data.X, dhat, data.Y)
     return fwl(data)
 

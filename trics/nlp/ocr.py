@@ -1,3 +1,4 @@
+import os 
 from typing import List
 from pdf2image import convert_from_path
 from PIL import Image
@@ -26,4 +27,9 @@ def get_text(doc: str, first_page: int = 1, last_page: int = 2) -> str:
         text += pytesseract.image_to_string(image, lang='eng')
 
     return text
+
+def cleanup_temp_file(temp_filename):
+    """Remove the temporary file if it exists."""
+    if os.path.exists(temp_filename):
+        os.remove(temp_filename)
 

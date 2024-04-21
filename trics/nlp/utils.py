@@ -42,3 +42,23 @@ def write_to_csv(file: str, case: str, summary: List[str]) -> None:
     with open(file, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([case] + summary)
+
+def find_directories_with_pdfs(base_folder : str) -> List[str]:
+    """
+    Find all directories within the base folder that contain at least one PDF file.
+
+    Args:
+    base_folder (str): The path to the base directory to search within.
+
+    Returns:
+    list: A list of directory names containing at least one PDF file.
+    """
+    directories_with_pdfs = []
+    for entry in os.listdir(base_folder):
+        dir_path = os.path.join(base_folder, entry)
+        if os.path.isdir(dir_path):
+            files_in_dir = os.listdir(dir_path)
+            if any(file_name.endswith('.pdf') for file_name in files_in_dir):
+                directories_with_pdfs.append(entry)
+
+    return directories_with_pdfs

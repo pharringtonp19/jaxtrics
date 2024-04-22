@@ -1,6 +1,8 @@
+# https://youtu.be/ULxMQ57engo?t=547
+
 import jax 
 import jax.numpy as jnp
-from trics.data import Data 
+from trics.regression.data import Data 
 
 def sample(k, p, data, key):
     idx = jax.random.choice(key, jnp.arange(k), shape=(k,), p=p, replace=True)

@@ -1,3 +1,6 @@
+import torch 
+import numpy as np 
+
 class EarlyStopping:
     def __init__(self, patience=5, verbose=False, delta=0, path='checkpoint.pt', trace_func=print):
         """
@@ -46,7 +49,7 @@ class EarlyStopping:
         torch.save(model.state_dict(), self.path)
         self.val_loss_min = val_loss
 
-def predict(model, data_loader):
+def predict(model, data_loader, device):
     model.eval()  # Set the model to evaluation mode.
     predictions = []
     with torch.no_grad():  # No gradients needed for predictions.

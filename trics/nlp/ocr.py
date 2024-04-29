@@ -37,8 +37,8 @@ def cleanup_temp_file(temp_filename):
     if os.path.exists(temp_filename):
         os.remove(temp_filename)
 
-def extract_pages(source_file, num_pages):
-    """Extracts the first 'num_pages' from the source PDF file and saves it to a temporary file."""
+def extract_first_k_pages(source_file, k):
+    """Extracts the first 'k' from the source PDF file and saves it to a temporary file."""
     reader = PdfReader(source_file)
     pdf_writer = PdfWriter()
 

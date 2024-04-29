@@ -11,7 +11,7 @@ import time
 
 def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> None:
     """
-    Extracts the first 'k' pages from the source PDF file and saves it to a temporary file.
+    Extracts the first 'num_pages' pages from the source PDF file and saves it to a temporary file.
 
     Args:
     source_file (str): The file path to the source PDF document.
@@ -29,9 +29,6 @@ def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> N
 
     with open(temp_file, 'wb') as temp_pdf:
         pdf_writer.write(temp_pdf)
-
-
-
 
 def read_pdf_with_azure(temp_filename: str, computervision_client: ComputerVisionClient) -> Optional[str]:
     """

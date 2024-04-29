@@ -45,7 +45,7 @@ def read_pdf_with_azure(temp_filename, computervision_client):
 def extract_text(data_folder, temp_file, DocketNo, file_pdf, intitial_k_pages, computervision_client):
 
     # Ensure there is no temp file
-     if os.path.exists(temp_file):
+    if os.path.exists(temp_file):
         os.remove(temp_file)
 
     # Define File Path

@@ -7,8 +7,18 @@ from PyPDF2 import PdfReader, PdfWriter
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 import time
 
-def extract_first_k_pages(source_file, temp_file, k):
-    """Extracts the first 'k' from the source PDF file and saves it to a temporary file."""
+def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> None:
+    """
+    Extracts the first 'k' pages from the source PDF file and saves it to a temporary file.
+
+    Args:
+    source_file (str): The file path to the source PDF document.
+    temp_file (str): The file path where the temporary PDF should be saved.
+    num_pages (int): The number of pages to extract from the source PDF.
+
+    Returns:
+    None
+    """
     reader = PdfReader(source_file)
     pdf_writer = PdfWriter()
 
@@ -17,6 +27,7 @@ def extract_first_k_pages(source_file, temp_file, k):
 
     with open(temp_file, 'wb') as temp_pdf:
         pdf_writer.write(temp_pdf)
+
 
 def read_pdf_with_azure(temp_filename, computervision_client):
     """Uses Azure Computer Vision to read text from a PDF stored in 'temp_filename'."""

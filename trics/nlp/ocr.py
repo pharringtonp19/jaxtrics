@@ -67,8 +67,21 @@ def read_pdf_with_azure(temp_filename: str, computervision_client: ComputerVisio
         return None
 
 
-def extract_text(data_folder, temp_file, DocketNo, file_pdf, intitial_k_pages, computervision_client):
+def extract_text(data_folder: str, temp_file: str, DocketNo: str, file_pdf: str, initial_k_pages: int, computervision_client: ComputerVisionClient) -> Optional[str]:
+    """
+    Extracts text from the initial pages of a specified PDF file using Azure's Computer Vision.
 
+    Args:
+    data_folder (str): The path to the base directory where PDF files are stored.
+    temp_file (str): The file path for the temporary file used to store extracted pages.
+    DocketNo (str): The docket number associated with the file, used to construct the file path.
+    file_pdf (str): The name of the PDF file from which text is to be extracted.
+    initial_k_pages (int): The number of initial pages from the PDF to extract and analyze.
+    computervision_client (ComputerVisionClient): An instance of Azure's Computer Vision client to use for OCR.
+
+    Returns:
+    Optional[str]: The extracted text from the PDF if successful, None otherwise.
+    """
     # Ensure there is no temp file
     if os.path.exists(temp_file):
         os.remove(temp_file)
@@ -77,9 +90,9 @@ def extract_text(data_folder, temp_file, DocketNo, file_pdf, intitial_k_pages, c
     source_file = os.path.join(data_folder, DocketNo, file_pdf)
 
     # Write Extracted Pages to a temp file
-    extract_first_k_pages(source_file, temp_file, intitial_k_pages)
+    extract_first_k_pages(source_file, temp_file, initial_k_pages)
 
     # Extract Text from the `initial_k_pages`
-    text = read_pdf_with_azure(temp_filename, computervision_client)
+    text = read_pdf_with_azure(temp_file, computervision_client)
 
     return text

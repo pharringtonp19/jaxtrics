@@ -52,7 +52,7 @@ def extract_text(data_folder, temp_file, DocketNo, file_pdf, intitial_k_pages, c
     source_file = os.path.join(data_folder, DocketNo, file_pdf)
 
     # Write Extracted Pages to a temp file
-    extract_pages(source_file, temp_file, intitial_k_pages)
+    extract_first_k_pages(source_file, temp_file, intitial_k_pages)
 
     # Extract Text from the `initial_k_pages`
     text = read_pdf_with_azure(temp_filename, computervision_client)

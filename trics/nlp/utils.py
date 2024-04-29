@@ -64,3 +64,7 @@ def find_directories_with_specific_pdf(base_folder: str, pdf_title: str) -> List
                 directories_with_specific_pdfs.append(entry)
 
     return directories_with_specific_pdfs
+
+def to_markdown(text):
+  text = text.replace('•', '  *')
+  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))

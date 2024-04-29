@@ -32,12 +32,8 @@ def get_text(doc: str, first_page: int = 1, last_page: int = 2) -> str:
 
     return text
 
-def cleanup_temp_file(temp_filename):
-    """Remove the temporary file if it exists."""
-    if os.path.exists(temp_filename):
-        os.remove(temp_filename)
-
-def extract_first_k_pages(source_file, k):
+   
+def extract_first_k_pages(source_file, temp_file, k):
     """Extracts the first 'k' from the source PDF file and saves it to a temporary file."""
     reader = PdfReader(source_file)
     pdf_writer = PdfWriter()
@@ -45,7 +41,7 @@ def extract_first_k_pages(source_file, k):
     for page in range(min(num_pages, len(reader.pages))):
         pdf_writer.add_page(reader.pages[page])
 
-    with open('temp.pdf', 'wb') as temp_pdf:
+    with open(temp_file, 'wb') as temp_pdf:
         pdf_writer.write(temp_pdf)
 
 def read_pdf_with_azure(temp_filename, computervision_client):
@@ -72,17 +68,19 @@ def read_pdf_with_azure(temp_filename, computervision_client):
         print(f"An error occurred: {e}")
         return ""
 
-def extract_text(DocketNo, file_pdf, k, data_folder, computervision_client):
-    temp_filename = 'temp.pdf'
-    cleanup_temp_file(temp_filename)
-    
-    """Coordinates the extraction of text from a PDF using Azure Computer Vision."""
+def extract_text(data_folder, temp_file, DocketNo, file_pdf, intitial_k_pages, computervision_client):
+
+    # Ensure there is no temp file
+     if os.path.exists(temp_file):
+        os.remove(temp_file)
+
+    # Define File Path
     source_file = os.path.join(data_folder, DocketNo, file_pdf)
-    
-    extract_pages(source_file, k)
+
+    # Write Extracted Pages to a temp file
+    extract_pages(source_file, temp_file, intitial_k_pages)
+
+    # Extract Text from the `initial_k_pages`
     text = read_pdf_with_azure(temp_filename, computervision_client)
-    cleanup_temp_file(temp_filename)  # Optional: Clean up again after reading
 
     return text
-
-

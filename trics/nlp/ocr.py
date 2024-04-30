@@ -35,7 +35,7 @@ def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> N
         pdf_writer.write(temp_pdf)
 
 
-def read_pdf_with_azure(temp_filename: str, client: DocumentIntelligenceClient) -> str:
+def read_pdf_with_azure(client: DocumentIntelligenceClient, temp_filename: str) -> str:
     with open(temp_filename, 'rb') as f:
         pdf_bytes = f.read()
         pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
@@ -54,12 +54,12 @@ def extract_text(client: DocumentIntelligenceClient, file_folder: str, temp_file
     Extracts text from the initial pages of a specified PDF file using Azure's Computer Vision.
 
     Args:
-    data_folder (str): The path to the base directory where PDF files are stored.
+    client (DocumentIntelligenceClient): An instance of Azure's Document Intelligence client to use for OCR.
+    file_folder (str): The path to the base directory where PDF files are stored.
     temp_file (str): The file path for the temporary file used to store extracted pages.
-    DocketNo (str): The docket number associated with the file, used to construct the file path.
-    file_pdf (str): The name of the PDF file from which text is to be extracted.
+    file_name (str): The name of the PDF file from which text is to be extracted.
     initial_k_pages (int): The number of initial pages from the PDF to extract and analyze.
-    computervision_client (ComputerVisionClient): An instance of Azure's Computer Vision client to use for OCR.
+    DocketNo (str): The docket number associated with the file, used to construct the file path.
 
     Returns:
     Optional[str]: The extracted text from the PDF if successful, None otherwise.
@@ -69,13 +69,13 @@ def extract_text(client: DocumentIntelligenceClient, file_folder: str, temp_file
         os.remove(temp_file)
 
     # Define File Path
-    source_file = os.path.join(data_folder, DocketNo, file_pdf)
+    source_file = os.path.join(file_folder, DocketNo, file_name)
 
     # Write Extracted Pages to a temp file
     extract_first_k_pages(source_file, temp_file, num_pages)
 
     # Extract Text from the `initial_k_pages`
-    text = read_pdf_with_azure(temp_file, computervision_client)
+    text = read_pdf_with_azure(client, temp_file)
 
     return text
 

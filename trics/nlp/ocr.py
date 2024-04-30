@@ -4,10 +4,14 @@ from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
 from PyPDF2 import PdfReader, PdfWriter
-from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
+import base64
+from azure.ai.documentintelligence import DocumentIntelligenceClient
+from azure.ai.documentintelligence.models import AnalyzeResult
 from typing import Optional
 import time
+import base64
+# from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+# from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 
 def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> None:
     """
@@ -30,39 +34,20 @@ def extract_first_k_pages(source_file: str, temp_file: str, num_pages: int) -> N
     with open(temp_file, 'wb') as temp_pdf:
         pdf_writer.write(temp_pdf)
 
-def read_pdf_with_azure(temp_filename: str, computervision_client: ComputerVisionClient) -> Optional[str]:
-    """
-    Uses Azure Computer Vision to read text from a PDF stored in 'temp_filename'.
 
-    Args:
-    temp_filename (str): The path to the temporary PDF file.
-    computervision_client (ComputerVisionClient): An instance of Azure's Computer Vision client.
+def read_pdf_with_azure(temp_filename: str, client: DocumentIntelligenceClient) -> str:
+    with open(temp_filename, 'rb') as f:
+        pdf_bytes = f.read()
+        pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
 
-    Returns:
-    Optional[str]: The extracted text if the process succeeds, otherwise None.
-    """
-    try:
-        with open(temp_filename, "rb") as pdf:
-            read_response = computervision_client.read_in_stream(pdf, raw=True)
-        operation_location_remote = read_response.headers["Operation-Location"]
-        operation_id = operation_location_remote.split("/")[-1]
+    # Pass the base64 encoded data
+    poller = client.begin_analyze_document(
+        model_id="prebuilt-read",
+        analyze_request={"base64Source": pdf_base64}
+    )
+    result = poller.result()  # result is of type AnalyzeResult
 
-        while True:
-            read_result = computervision_client.get_read_result(operation_id)
-            if read_result.status not in ['notStarted', 'running']:
-                break
-            time.sleep(1)
-
-        if read_result.status == OperationStatusCodes.succeeded:
-            text = ""
-            for text_result in read_result.analyze_result.read_results:
-                for line in text_result.lines:
-                    text += line.text + "\n"
-            return text
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
-
+    return result.content  # Assuming result.content is of type str
 
 def extract_text(data_folder: str, temp_file: str, DocketNo: str, file_pdf: str, num_pages: int, computervision_client: ComputerVisionClient) -> Optional[str]:
     """
@@ -93,3 +78,36 @@ def extract_text(data_folder: str, temp_file: str, DocketNo: str, file_pdf: str,
     text = read_pdf_with_azure(temp_file, computervision_client)
 
     return text
+
+# def read_pdf_with_azure(temp_filename: str, computervision_client: ComputerVisionClient) -> Optional[str]:
+#     """
+#     Uses Azure Computer Vision to read text from a PDF stored in 'temp_filename'.
+
+#     Args:
+#     temp_filename (str): The path to the temporary PDF file.
+#     computervision_client (ComputerVisionClient): An instance of Azure's Computer Vision client.
+
+#     Returns:
+#     Optional[str]: The extracted text if the process succeeds, otherwise None.
+#     """
+#     try:
+#         with open(temp_filename, "rb") as pdf:
+#             read_response = computervision_client.read_in_stream(pdf, raw=True)
+#         operation_location_remote = read_response.headers["Operation-Location"]
+#         operation_id = operation_location_remote.split("/")[-1]
+
+#         while True:
+#             read_result = computervision_client.get_read_result(operation_id)
+#             if read_result.status not in ['notStarted', 'running']:
+#                 break
+#             time.sleep(1)
+
+#         if read_result.status == OperationStatusCodes.succeeded:
+#             text = ""
+#             for text_result in read_result.analyze_result.read_results:
+#                 for line in text_result.lines:
+#                     text += line.text + "\n"
+#             return text
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+#         return None

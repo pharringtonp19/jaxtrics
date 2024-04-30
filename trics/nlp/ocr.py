@@ -49,7 +49,7 @@ def read_pdf_with_azure(temp_filename: str, client: DocumentIntelligenceClient) 
 
     return result.content  # Assuming result.content is of type str
 
-def extract_text(data_folder: str, temp_file: str, DocketNo: str, file_pdf: str, num_pages: int, computervision_client: ComputerVisionClient) -> Optional[str]:
+def extract_text(client: DocumentIntelligenceClient, file_folder: str, temp_file: str, file_name: str, num_pages: int, DocketNo: str) -> Optional[str]:
     """
     Extracts text from the initial pages of a specified PDF file using Azure's Computer Vision.
 

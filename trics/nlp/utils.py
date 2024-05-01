@@ -68,6 +68,26 @@ def find_directories_with_specific_pdf(base_folder: str, pdf_title: str) -> List
 
     return directories_with_specific_pdfs
 
+def average_pages_in_pdfs(directory, file_name):
+    total_pages = 0
+    pdf_count = 0
+    
+    for filename in os.listdir(directory):
+        if filename.endswith(file_name):
+            pdf_path = os.path.join(directory, filename)
+            try:
+                with open(pdf_path, 'rb') as file:
+                    reader = PyPDF2.PdfFileReader(file)
+                    total_pages += reader.numPages
+                    pdf_count += 1
+            except Exception as e:
+                print(f"Failed to read {filename}: {str(e)}")
+    
+    if pdf_count > 0:
+        return total_pages / pdf_count
+    else:
+        return 0  # No PDF files found or all files failed to open/read
+
 def to_markdown(text):
   text = text.replace('•', '  *')
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))

@@ -78,8 +78,8 @@ def average_pages_in_pdfs(base_folder: str, pdf_title: str):
         dir_path = os.path.join(base_folder, entry)
         if os.path.isdir(dir_path):
             for filename in os.listdir(dir_path):
-                if filename.endswith(pdf_title):
-                    pdf_path = os.path.join(dir_path, pdf_title)
+                if filename == pdf_title:
+                    pdf_path = os.path.join(dir_path, filename)
                     try:
                         with open(pdf_path, 'rb') as file:
                             reader = PyPDF2.PdfReader(file)
@@ -88,6 +88,8 @@ def average_pages_in_pdfs(base_folder: str, pdf_title: str):
                         logging.error(f"File not found: {pdf_path}")
                     except Exception as e:
                         logging.error(f"Failed to read {filename}: {str(e)}")
+                    else:
+                        print(f"Processed {pdf_path} successfully.")
     
     return np.array(pages)
 

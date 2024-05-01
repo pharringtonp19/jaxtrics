@@ -4,6 +4,10 @@ import csv
 from IPython.display import display
 from IPython.display import Markdown
 import textwrap
+import logging
+import PyPDF2
+import numpy as np 
+
 
 def create_csv_with_headers(filename: str, headers: List[str]) -> None:
     """
@@ -68,25 +72,24 @@ def find_directories_with_specific_pdf(base_folder: str, pdf_title: str) -> List
 
     return directories_with_specific_pdfs
 
-def average_pages_in_pdfs(directory, file_name):
-    total_pages = 0
-    pdf_count = 0
+def average_pages_in_pdfs(base_folder: str, pdf_title: str):
+    pages = []
+    for entry in os.listdir(base_folder):
+        dir_path = os.path.join(base_folder, entry)
+        if os.path.isdir(dir_path):
+            for filename in os.listdir(dir_path):
+                if filename.endswith(pdf_title):
+                    pdf_path = os.path.join(dir_path, pdf_title)
+                    try:
+                        with open(pdf_path, 'rb') as file:
+                            reader = PyPDF2.PdfReader(file)
+                            pages.append(len(reader.pages))
+                    except FileNotFoundError:
+                        logging.error(f"File not found: {pdf_path}")
+                    except Exception as e:
+                        logging.error(f"Failed to read {filename}: {str(e)}")
     
-    for filename in os.listdir(directory):
-        if filename.endswith(file_name):
-            pdf_path = os.path.join(directory, filename)
-            try:
-                with open(pdf_path, 'rb') as file:
-                    reader = PyPDF2.PdfFileReader(file)
-                    total_pages += reader.numPages
-                    pdf_count += 1
-            except Exception as e:
-                print(f"Failed to read {filename}: {str(e)}")
-    
-    if pdf_count > 0:
-        return total_pages / pdf_count
-    else:
-        return 0  # No PDF files found or all files failed to open/read
+    return np.array(pages)
 
 def to_markdown(text):
   text = text.replace('•', '  *')

@@ -88,8 +88,6 @@ def average_pages_in_pdfs(base_folder: str, pdf_title: str):
                         logging.error(f"File not found: {pdf_path}")
                     except Exception as e:
                         logging.error(f"Failed to read {filename}: {str(e)}")
-                    else:
-                        print(f"Processed {pdf_path} successfully.")
     
     return np.array(pages)
 

@@ -94,3 +94,27 @@ def average_pages_in_pdfs(base_folder: str, pdf_title: str):
 def to_markdown(text):
   text = text.replace('•', '  *')
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+
+def blank_out_addresses_and_zip_codes(text):
+    """
+    Replace all addresses and 5-digit zip codes in the given text with '[ADDRESS]' and 'XXXXX' respectively.
+    
+    Parameters:
+    text (str): The input text where addresses and zip codes need to be blanked out.
+    
+    Returns:
+    str: The modified text with addresses and zip codes replaced.
+    """
+    # Regular expression pattern to match simple addresses
+    address_pattern = r'\d+\s+[A-Za-z]+(?:\s+[A-Za-z]+)*\s+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive)\b'
+    
+    # Replace found addresses with '[ADDRESS]'
+    modified_text = re.sub(address_pattern, '[ADDRESS]', text)
+    
+    # Regular expression pattern to match 5-digit zip codes
+    zip_code_pattern = r'\b\d{5}\b'
+    
+    # Replace all occurrences of zip code pattern with 'XXXXX'
+    modified_text = re.sub(zip_code_pattern, 'XXXXX', modified_text)
+    
+    return modified_text

@@ -92,8 +92,16 @@ def average_pages_in_pdfs(base_folder: str, pdf_title: str):
     return np.array(pages)
 
 def to_markdown(text):
-  text = text.replace('•', '  *')
-  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+    # Replace bullet points with Markdown bullet points
+    text = text.replace('•', '  *')
+    
+    # Ensure no unintended strikethrough syntax
+    text = text.replace('<s>', '')
+    
+    # Indent text properly for blockquote
+    indented_text = textwrap.indent(text, '> ', predicate=lambda _: True)
+    
+    return Markdown(indented_text)
 
 def blank_out_addresses_and_zip_codes(text):
     """
